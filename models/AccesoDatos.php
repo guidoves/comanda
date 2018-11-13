@@ -4,7 +4,7 @@ class AccesoDatos
     private static $ObjetoAccesoDatos;
     private $objetoPDO;
     private static $localhost = 'localhost';
-    private static $dbname = 'salaDeJuegos';
+    private static $dbname = 'comanda';
     private static $user = 'root';
     private static $pass = '';
  

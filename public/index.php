@@ -4,6 +4,10 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 require '../vendor/autoload.php';
 
+//IMPORTS
+require_once '../mw/Cors.php';
+require_once '../controllers/users.php';
+
 
 $configuration = [
     'settings' => [
@@ -21,6 +25,10 @@ $app->get('/hello/{name}', function (Request $request, Response $response) {
     return $response;
 });
 
+
+$app->post('/users/new', \Users::class . ':new_user')->add(\Cors::class . ':HabilitarCORSTodos');
+
+$app->post('/users/update', \Users::class . ':update_user')->add(\Cors::class . ':HabilitarCORSTodos');
 
 $app->run();
 
