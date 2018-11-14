@@ -62,8 +62,16 @@ class User{
 
     public static function find_by_id($id){
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
-        $consulta = $objetoAccesoDato->RetornarConsulta("SELECT id, user_name, role, created, updated FROM empleado WHERE id=:id");
+        $consulta = $objetoAccesoDato->RetornarConsulta("SELECT id, user_name, role, created, updated FROM users WHERE id=:id");
         $consulta->bindValue(':id',$id,PDO::PARAM_INT);
+        $consulta->execute();
+        return $consulta->fetchAll(PDO::FETCH_CLASS,"User");
+    }
+
+    public static function find_by_username($user_name){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->RetornarConsulta("SELECT id, user_name, password, role, created, updated FROM users WHERE user_name=:user_name");
+        $consulta->bindValue(':user_name',$user_name,PDO::PARAM_STR);
         $consulta->execute();
         return $consulta->fetchAll(PDO::FETCH_CLASS,"User");
     }

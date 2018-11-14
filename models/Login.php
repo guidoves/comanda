@@ -3,16 +3,16 @@ require_once 'AccesoDatos.php';
 
 class Login{
 
-    $id;
-    $user_id;
-    $login;
+    public $id;
+    public $user_id;
+    public $login_date;
 
     public function new_login(){
 
-        $login = date("j F, Y, g:i a");
+        $login_date = date("j F, Y, g:i a");
         
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-        $consulta =$objetoAccesoDato->RetornarConsulta("INSERT into logins (user_id, login)values('$this->user_id','$login')");
+        $consulta =$objetoAccesoDato->RetornarConsulta("INSERT into logins (user_id, login_date)values('$this->user_id','$login_date')");
         $consulta->execute();
         
         return $objetoAccesoDato->RetornarUltimoIdInsertado();

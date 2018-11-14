@@ -12,8 +12,9 @@ class Users{
         $user->password = $body['password'];
         $user->role = $body['role'];
 
-        $newUser = $user->new_user();
-        $msj = array("ok" => "true", "msj" => "nuevo usuario dado de alta!", "user" => $newuser->user_name);
+        $user->new_user();
+
+        $msj = array("ok" => "true", "msj" => "nuevo usuario dado de alta!", "user" => $user->user_name);
         return $reponse->withJson($msj, 200);
 
 
