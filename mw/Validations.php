@@ -12,10 +12,13 @@ class Validations{
         
         $reg_user = "/^[a-zA-Z0-9\s]{1,50}+$/";
         
-        if (!isset($body['user_name']) || !isset($body['password']) || !isset($body['role']) ) {
+
+        if ( !isset($body['full_name']) || !isset($body['user_name']) || !isset($body['password']) || !isset($body['role']) ) {
             $msj = array("ok" => "false", "msj" => "No se enviaron los campos requeridos");
             return $response->withJson($msj, 400);
         }
+
+        die();
 
         $checkUsr = User::find_by_username($body['user_name']);
 

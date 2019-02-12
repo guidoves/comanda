@@ -2,7 +2,7 @@
 
 require_once '../models/User.php';
 
-class Users{
+class UserController{
 
     public function new_user($request, $reponse){
 
@@ -11,6 +11,7 @@ class Users{
         $user->user_name = $body['user_name'];
         $user->password = $body['password'];
         $user->role = $body['role'];
+        $user->full_name = $body['full_name'];
 
         $user->new_user();
 
