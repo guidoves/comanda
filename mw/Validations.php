@@ -18,8 +18,6 @@ class Validations{
             return $response->withJson($msj, 400);
         }
 
-        die();
-
         $checkUsr = User::find_by_username($body['user_name']);
 
         if(count($checkUsr) > 0){
@@ -55,7 +53,7 @@ class Validations{
             $msj = array("ok" => "false", "err" => $errors);
             return $response->withJson($msj, 400);
         }
-        
+
         return $next($request, $response);
         
     }

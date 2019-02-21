@@ -7,6 +7,7 @@ class Cors{
 		*/
 		
 		 $response = $next($request, $response);
+
 		
 		 //solo afecto la salida con los header
 		// $response->getBody()->write('<p>habilitado HabilitarCORSTodos</p>');
