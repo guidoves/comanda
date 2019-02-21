@@ -4,7 +4,7 @@ require_once 'AccesoDatos.php';
 class Table{
     public $id;
     public $status;
-    public $identifier;
+    public $identifier; 
 
     public function new_table(){
         

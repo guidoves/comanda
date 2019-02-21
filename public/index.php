@@ -12,6 +12,8 @@ require_once '../controllers/login.php';
 
 require_once '../controllers/tables.php';
 
+require_once '../models/Comanda.php';
+
 
 $configuration = [
     'settings' => [
@@ -39,6 +41,8 @@ $app->post('/users/update', \UserController::class . ':update_user')->add(\Cors:
 $app->post('/tables/new', \TableController::class . ':new_table')->add(\Cors::class . ':HabilitarCORSTodos');
 $app->post('/tables/update', \TableController::class . ':update_table')->add(\Cors::class . ':HabilitarCORSTodos');
 $app->get('/tables/list', \TableController::class . ':all_tables')->add(\Cors::class . ':HabilitarCORSTodos');
+
+$app->get('/test', \Comanda::class . ':new_comanda')->add(\Cors::class . ':HabilitarCORSTodos');
 
 $app->run();
 
