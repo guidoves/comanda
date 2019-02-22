@@ -4,15 +4,16 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 require '../vendor/autoload.php';
 
-//IMPORTS
+//MIDDLEWARE
 require_once '../mw/Cors.php';
 require_once '../mw/Validations.php';
+
+//CONTROLLERS
 require_once '../controllers/users.php';
 require_once '../controllers/login.php';
-
 require_once '../controllers/tables.php';
-
-require_once '../models/Comanda.php';
+require_once '../controllers/comanda.php';
+require_once '../controllers/orders.php';
 
 
 $configuration = [
@@ -42,7 +43,9 @@ $app->post('/tables/new', \TableController::class . ':new_table')->add(\Cors::cl
 $app->post('/tables/update', \TableController::class . ':update_table')->add(\Cors::class . ':HabilitarCORSTodos');
 $app->get('/tables/list', \TableController::class . ':all_tables')->add(\Cors::class . ':HabilitarCORSTodos');
 
-$app->get('/test', \Comanda::class . ':new_comanda')->add(\Cors::class . ':HabilitarCORSTodos');
+$app->post('/comanda/new', \ComandaController::class . ':new_comanda')->add(\Cors::class . ':HabilitarCORSTodos');
+
+$app->post('/order/new', \OrderController::class . ':new_order')->add(\Cors::class . ':HabilitarCORSTodos');
 
 $app->run();
 

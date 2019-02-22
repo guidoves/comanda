@@ -1,6 +1,6 @@
 <?php
 require_once 'AccesoDatos.php';
-require_once 'User.php';
+require_once 'Util.php';
 
 class Comanda{
     public $id;
@@ -13,18 +13,18 @@ class Comanda{
     public $date;
     public $photo;
     public $mozo_id;
+    public $finalized;
 
     public function new_comanda(){
 
-        $date = $login_date = date("j F, Y, g:i a");
-        $mozo = User::find_by_id($this->mozo_id);
+        $this->date = $login_date = date("j F, Y, g:i a");
+        $this->identifier = generarCodigo(5);
 
-        $identifier = substr('a', 0 , 4);
-
-        var_dump($identifier);
-        die();
-
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+        $consulta =$objetoAccesoDato->RetornarConsulta("INSERT into comandas (table_id, date, mozo_id, identifier)values('$this->table_id','$this->date','$this->mozo_id','$this->identifier')");
+        $consulta->execute();
         
+        return $objetoAccesoDato->RetornarUltimoIdInsertado();    
 
     }
 

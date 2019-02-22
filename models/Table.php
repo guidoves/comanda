@@ -1,5 +1,6 @@
 <?php
 require_once 'AccesoDatos.php';
+require_once 'Util.php';
 
 class Table{
     public $id;
@@ -9,7 +10,7 @@ class Table{
     public function new_table(){
         
         $tables = count(Table::all());
-        $identifier = 'MESA_' . (string)$tables;
+        $identifier = 'ME' . generarCodigo(3);
         
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
         $consulta =$objetoAccesoDato->RetornarConsulta("INSERT into tables (identifier)values('$identifier')");

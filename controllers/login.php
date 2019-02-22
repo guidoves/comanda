@@ -36,7 +36,7 @@ class Logins{
 
         $token = AutentificadorJWT::CrearToken($user);
 
-        $msj = array("ok" => "true", "token" => $token);
+        $msj = array("ok" => "true", "token" => $token, "user" => $user);
 
         $login = new Login();
         $login->user_id = $user['id'];
