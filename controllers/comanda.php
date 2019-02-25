@@ -19,6 +19,14 @@ class ComandaController{
 
     }
 
+    public function all_activate_comandas($request, $response){
+        $comandas = Comanda::all_active_comandas();
+        $msj = $msj = array("ok" => "true", "comandas" => $comandas);
+        return $response->withJson($msj, 200);
+    }
+
+    
+
 
 
 }

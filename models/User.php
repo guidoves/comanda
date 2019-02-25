@@ -28,16 +28,29 @@ class User{
         $updated = date("j F, Y, g:i a");
         
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();        
-        $consulta =$objetoAccesoDato->RetornarConsulta("UPDATE users set full_name=:full_name user_name=:name, role=:role, is_activated=:state, updated=:updated WHERE id=:id");
+        $consulta =$objetoAccesoDato->RetornarConsulta("UPDATE users set full_name=:full_name user_name=:name, role=:role, updated=:updated WHERE id=:id");
         $consulta->bindValue(':full_name', $user->full_name, PDO::PARAM_STR);
         $consulta->bindValue(':id', $user->id, PDO::PARAM_INT);
         $consulta->bindValue(':name', $user->user_name, PDO::PARAM_STR);
         $consulta->bindValue(':role', $user->role, PDO::PARAM_STR);
-        $consulta->bindValue(':state', $user->is_activated, PDO::PARAM_INT);
         $consulta->bindValue(':updated', $updated, PDO::PARAM_STR);
         $consulta->execute();
 
-        return $objetoAccesoDato->RetornarUltimoIdInsertado();
+        return $consulta->rowCount();
+
+    }
+
+    public static function update_status($user_id, $status){
+        $updated = date("j F, Y, g:i a");
+        
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();        
+        $consulta =$objetoAccesoDato->RetornarConsulta("UPDATE users set is_activated=:is_activated, updated=:updated WHERE id=:id");     
+        $consulta->bindValue(':id', $user_id, PDO::PARAM_INT);
+        $consulta->bindValue(':updated', $updated, PDO::PARAM_STR);
+        $consulta->bindValue(':is_activated', $status, PDO::PARAM_INT);
+        $consulta->execute();
+
+        return $consulta->rowCount();
     }
 
     public static function update_password($id, $password){
@@ -54,6 +67,13 @@ class User{
     }
 
     public static function all(){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+        $consulta =$objetoAccesoDato->RetornarConsulta("SELECT id, user_name, role, created, updated FROM users");
+        $consulta->execute();			
+        return $consulta->fetchAll(PDO::FETCH_CLASS,"User");
+    }
+
+    public static function all_activate(){
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
         $consulta =$objetoAccesoDato->RetornarConsulta("SELECT id, user_name, role, created, updated FROM users WHERE is_activated=:status ");
         $consulta->bindValue(':status', 1, PDO::PARAM_INT);

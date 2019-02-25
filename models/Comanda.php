@@ -13,7 +13,7 @@ class Comanda{
     public $date;
     public $photo;
     public $mozo_id;
-    public $finalized;
+    public $status;
 
     public function new_comanda(){
 
@@ -26,6 +26,15 @@ class Comanda{
         
         return $objetoAccesoDato->RetornarUltimoIdInsertado();    
 
+    }
+
+    public static function all_active_comandas(){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+        $consulta =$objetoAccesoDato->RetornarConsulta("SELECT * from comandas WHERE status =:status");
+        $consulta->bindValue(':status','ABIERTA', PDO::PARAM_STR);
+        $consulta->execute();
+        
+        return $consulta->fetchAll(PDO::FETCH_CLASS,"Table");    
     }
 
 
