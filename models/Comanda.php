@@ -38,6 +38,16 @@ class Comanda{
         return $consulta->fetchAll(PDO::FETCH_CLASS,"Comanda");    
     }
 
+    public static function finish_comanda($table_id){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();        
+        $consulta =$objetoAccesoDato->RetornarConsulta("UPDATE comandas set status=:status WHERE table_id=:id AND status='CLIENTE PAGANDO'");
+        $consulta->bindValue(':status', 'FINALIZADO', PDO::PARAM_STR);
+        $consulta->bindValue(':id', $table_id, PDO::PARAM_INT);
+        $consulta->execute();
+
+        return $consulta->rowCount();
+    }
+
     public static function get_tables($start, $end, $query){
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
         $consulta =$objetoAccesoDato->RetornarConsulta("SELECT table_id, COUNT(table_id) as total FROM comandas WHERE (status='FINALIZADO') AND date_stats BETWEEN '$start' AND '$end' GROUP BY table_id ORDER BY total $query");

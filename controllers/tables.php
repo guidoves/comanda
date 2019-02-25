@@ -12,26 +12,101 @@ class TableController{
         $table = new Table();
         $table->new_table();
 
-        $msj = array("ok" => "true", "msj" => "nueva tabla dada de alta!", "table" => $table->id);
+        $msj = array("ok" => "true", "msj" => "nueva mesa dada de alta!", "mesa" => $table->id);
         return $reponse->withJson($msj, 200);
 
     }
 
-    public function update_table($request, $reponse){
+    public function update_table($request, $response){
         
         $body = $request->getParsedBody();
+        
+        if(!isset($body['id']) || !isset($body['status'])){
+            $msj = array("ok" => "false");
+            return $response->withJson($msj, 400);
+        }
+
+        if($body['status'] != 'CLIENTE ESPERANDO' || $body['status'] != 'CLIENTE COMIENDO'
+         || $body['status'] != 'CLIENTE PAGANDO' ){
+            $msj = array("ok" => "false", "msj" => "estado inválido");
+            return $response->withJson($msj, 400);
+        }
+
         $table = new Table();
         $table->id = $body['id'];
         $table->status = $body['status'];
         Table::update($table);
         
         $msj = array("ok" => "true", "msj" => " modificado!");
-        return $reponse->withJson($msj, 200);
+        return $response->withJson($msj, 200);
 
     }
 
+    public function disable_table($request, $response){
+        $body = $request->getParsedBody();
+        
+        if(!isset($body['id'])){
+            $msj = array("ok" => "false");
+            return $response->withJson($msj, 400);
+        }
+
+        Table::disable_table($body['id']);
+
+        $msj = array("ok" => "true", "msj" => "mesa dada de baja");
+        return $response->withJson($msj, 200);
+    }
+
+    public function open_table($request, $response){
+        $body = $request->getParsedBody();
+
+        if(!isset($body['id']) || !isset($body['status']) ){
+            $msj = array("ok" => "false");
+            return $response->withJson($msj, 400);
+        }
+
+        if($body['status'] != 'ABIERTA'){
+            $msj = array("ok" => "true", "msj" => "mesa dada de baja");
+            return $response->withJson($msj, 200);
+        }
+
+        $table = new Table();
+        $table->id = $body['id'];
+        $table->status = $body['status'];
+        Table::update($table);
+        
+        $comanda = new Comanda();
+        $comanda->mozo_id = $body['mozo_id'];
+        $comanda->table_id = $body['id'];
+        $comanda->new_comanda();
+
+        $msj = array("ok" => "true", "msj" => "mesa abierta");
+        return $response->withJson($msj, 200);
+
+    }
+
+    public function close_table($request, $response){
+        $body = $request->getParsedBody();
+
+        if(!isset($body['id'])){
+            $msj = array("ok" => "false");
+            return $response->withJson($msj, 400);
+        }
+
+        $table = new Table();
+        $table->id = $body['id'];
+        $table->status = 'CERRADA';
+        Table::update($table);
+        Comanda::finish_comanda($body['id']);
+
+        $msj = array("ok" => "true", "msj" => " modificado!");
+        return $response->withJson($msj, 200);
+
+    }
+
+    
+
     public function all_tables($request, $response){
-        $tables = Table::all();
+        $tables = Table::all_activate();
         $msj = $msj = array("ok" => "true", "tables" => $tables);
         return $response->withJson($msj, 200);
     }

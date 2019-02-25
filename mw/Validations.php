@@ -1,6 +1,7 @@
 <?php
 
 require_once '../models/User.php';
+require_once '../controllers/autentificadorJWT.php';
 
 class Validations{
     public function validate_new_user($request,$response,$next){
@@ -56,6 +57,82 @@ class Validations{
 
         return $next($request, $response);
         
+    }
+
+    public function checkMozo($request, $response, $next){
+        $body = $request->getParsedBody();
+
+        if ( !isset($body['token']) {
+            $msj = array("ok" => "false", "msj" => "Fallo autenticación");
+            return $response->withJson($msj, 403);
+        }
+
+        try{
+            AutentificadorJWT::VerificarToken($body['token']);
+        }
+        catch( Exception $e ){
+            $msj = array("ok" => "false", "msj" => "Fallo autenticación");
+            return $response->withJson($msj, 403);
+        }
+
+        $data = AutentificadorJWT::ObtenerData($body['token']);
+        if($data->role == 'ADMIN' || $data->role == 'MOZO' ){
+            return $next($request, $response);
+        }
+        else{
+            $msj = array("ok" => "false", "msj" => "Fallo autenticación");
+            return $response->withJson($msj, 403);
+        }
+
+    }
+
+    public function checkUser($request, $response){
+        if ( !isset($body['token']) {
+            $msj = array("ok" => "false", "msj" => "Fallo autenticación");
+            return $response->withJson($msj, 403);
+        }
+
+        try{
+            AutentificadorJWT::VerificarToken($body['token']);
+        }
+        catch( Exception $e ){
+            $msj = array("ok" => "false", "msj" => "Fallo autenticación");
+            return $response->withJson($msj, 403);
+        }
+
+        $data = AutentificadorJWT::ObtenerData($body['token']);
+        if($data->role == 'ADMIN' || $data->role == 'BARTENDER' || $data->role == 'CERVECERO'
+        || $data->role == 'COCINERO' ){
+            return $next($request, $response);
+        }
+        else{
+            $msj = array("ok" => "false", "msj" => "Fallo autenticación");
+            return $response->withJson($msj, 403);
+        }
+    }
+
+    public function checkAdmin($request, $response){
+        if ( !isset($body['token']) {
+            $msj = array("ok" => "false", "msj" => "Fallo autenticación");
+            return $response->withJson($msj, 403);
+        }
+
+        try{
+            AutentificadorJWT::VerificarToken($body['token']);
+        }
+        catch( Exception $e ){
+            $msj = array("ok" => "false", "msj" => "Fallo autenticación");
+            return $response->withJson($msj, 403);
+        }
+
+        $data = AutentificadorJWT::ObtenerData($body['token']);
+        if($data->role == 'ADMIN'){
+            return $next($request, $response);
+        }
+        else{
+            $msj = array("ok" => "false", "msj" => "Fallo autenticación");
+            return $response->withJson($msj, 403);
+        }
     }
 }
 
