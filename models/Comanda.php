@@ -14,6 +14,7 @@ class Comanda{
     public $photo;
     public $mozo_id;
     public $status;
+    public $date_stats;
 
     public function new_comanda(){
 
@@ -21,7 +22,7 @@ class Comanda{
         $this->identifier = generarCodigo(5);
 
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-        $consulta =$objetoAccesoDato->RetornarConsulta("INSERT into comandas (table_id, date, mozo_id, identifier)values('$this->table_id','$this->date','$this->mozo_id','$this->identifier')");
+        $consulta =$objetoAccesoDato->RetornarConsulta("INSERT into comandas (table_id, date, mozo_id, identifier, date_stats)values('$this->table_id','$this->date','$this->mozo_id','$this->identifier', NOW())");
         $consulta->execute();
         
         return $objetoAccesoDato->RetornarUltimoIdInsertado();    
@@ -34,7 +35,43 @@ class Comanda{
         $consulta->bindValue(':status','ABIERTA', PDO::PARAM_STR);
         $consulta->execute();
         
-        return $consulta->fetchAll(PDO::FETCH_CLASS,"Table");    
+        return $consulta->fetchAll(PDO::FETCH_CLASS,"Comanda");    
+    }
+
+    public static function get_tables($start, $end, $query){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+        $consulta =$objetoAccesoDato->RetornarConsulta("SELECT table_id, COUNT(table_id) as total FROM comandas WHERE (status='FINALIZADO') AND date_stats BETWEEN '$start' AND '$end' GROUP BY table_id ORDER BY total $query");
+        $consulta->execute();			
+        return $consulta->fetchAll(PDO::FETCH_CLASS,"Comanda");
+    }
+
+    public static function get_tables_by_amount($start, $end, $query){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+        $consulta =$objetoAccesoDato->RetornarConsulta("SELECT table_id, SUM(amount) as total FROM comandas WHERE (status='FINALIZADO') AND date_stats BETWEEN '$start' AND '$end' GROUP BY table_id ORDER BY total $query");
+        $consulta->execute();			
+        return $consulta->fetchAll(PDO::FETCH_CLASS,"Comanda");
+    }
+
+    public static function get_table_by_amount($start, $end, $table_id){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+        $consulta =$objetoAccesoDato->RetornarConsulta("SELECT table_id, SUM(amount) as total FROM comandas WHERE table_id=:table_id AND (status='FINALIZADO') AND date_stats BETWEEN '$start' AND '$end'");
+        $consulta->bindValue(':table_id',$table_id, PDO::PARAM_INT);
+        $consulta->execute();			
+        return $consulta->fetchAll(PDO::FETCH_CLASS,"Comanda");
+    }
+
+    public static function get_tables_by_amount_import($start, $end, $query){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+        $consulta =$objetoAccesoDato->RetornarConsulta("SELECT table_id, amount FROM comandas WHERE (status='FINALIZADO') AND date_stats BETWEEN '$start' AND '$end' ORDER BY amount $query");
+        $consulta->execute();			
+        return $consulta->fetchAll(PDO::FETCH_CLASS,"Comanda");
+    }
+
+    public static function get_opinion_tables($start, $end){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+        $consulta =$objetoAccesoDato->RetornarConsulta("SELECT table_id, opinion FROM comandas WHERE (status='FINALIZADO') AND date_stats BETWEEN '$start' AND '$end'");
+        $consulta->execute();			
+        return $consulta->fetchAll(PDO::FETCH_CLASS,"Comanda");
     }
 
 

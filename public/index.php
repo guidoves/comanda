@@ -49,6 +49,11 @@ $app->get('/users/all_activate_users', \UserController::class . ':all_activate_u
 $app->post('/tables/new', \TableController::class . ':new_table')->add(\Cors::class . ':HabilitarCORSTodos');
 $app->post('/tables/update', \TableController::class . ':update_table')->add(\Cors::class . ':HabilitarCORSTodos');
 $app->get('/tables/list', \TableController::class . ':all_tables')->add(\Cors::class . ':HabilitarCORSTodos');
+$app->get('/tables/get_used', \TableController::class . ':get_used_tables')->add(\Cors::class . ':HabilitarCORSTodos');
+$app->get('/tables/get_table_by_amount', \TableController::class . ':get_table_by_amount')->add(\Cors::class . ':HabilitarCORSTodos');
+$app->get('/tables/get_tables_by_amount', \TableController::class . ':get_tables_by_amount')->add(\Cors::class . ':HabilitarCORSTodos');
+$app->get('/tables/get_tables_by_amount_import', \TableController::class . ':get_tables_by_amount_import')->add(\Cors::class . ':HabilitarCORSTodos');
+$app->get('/tables/get_opinion_tables', \TableController::class . ':get_opinion')->add(\Cors::class . ':HabilitarCORSTodos');
 
 $app->post('/comanda/new', \ComandaController::class . ':new_comanda')->add(\Cors::class . ':HabilitarCORSTodos');
 $app->get('/comanda/all_activate', \ComandaController::class . ':all_activate_comandas')->add(\Cors::class . ':HabilitarCORSTodos');
