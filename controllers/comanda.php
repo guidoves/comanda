@@ -88,7 +88,7 @@ class ComandaController{
 
         $dir = $comanda->photo;
 
-        id(!file_exists($dir)){
+        if(!file_exists($dir)){
             $msj = array("ok" => "false", "msj" => "no existe el archivo");
             return $response->withJson($msj, 400);
         }
