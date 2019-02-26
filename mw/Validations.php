@@ -2,6 +2,7 @@
 
 require_once '../models/User.php';
 require_once '../controllers/autentificadorJWT.php';
+require_once '../models/Table.php';
 
 class Validations{
     public function validate_new_user($request,$response,$next){
@@ -126,6 +127,20 @@ class Validations{
             $msj = array("ok" => "false", "msj" => "Fallo autenticación");
             return $response->withJson($msj, 403);
         }
+    }
+
+    public function checkTable($request, $response, $next){
+        $identifier = $request->getHeader('identifier')[0];
+
+        $table = Table::find_by_identifier($identifier);
+
+        if(count($table) == 0  ){
+            $msj = array("ok" => "false", "msj" => "No existe la mesa");
+            return $response->withJson($msj, 403);
+        }
+
+        return $next($request, $response);
+
     }
 }
 

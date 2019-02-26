@@ -47,6 +47,63 @@ class ComandaController{
         return $response->withJson($msj, 200);
     }
 
+    public function up_photo($request, $response){
+        $body = $request->getParsedBody();
+
+
+        if(!isset($body['comanda_id']) || !isset($_FILES['file'])){
+            $msj = array("ok" => "false");
+            return $response->withJson($msj, 400);
+        }
+
+        $comanda = Comanda::find_by_id($body['comanda_id'])[0];
+
+        if(!$comanda){
+            $msj = array("ok" => "false", "msj" => "no se encontro la comanda");
+            return $response->withJson($msj, 400);
+        }
+        
+        $ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+        $file = $comanda->id . '.' . $ext;
+        $dir = './static/' . $file;
+
+        Comanda::update($comanda->id, 'photo', $dir);
+    
+        move_uploaded_file($_FILES['file']['tmp_name'], $dir);
+
+        $msj = array("ok" => "true", "msj" => "foto subida!");
+        return $response->withJson($msj, 200);
+    
+    }
+
+    public function get_orders_for_user($request, $response){
+        $body = $request->getParsedBody();
+
+        if(!isset($body['comanda_identifier'])){
+            $msj = array("ok" => "false");
+            return $response->withJson($msj, 400);
+        }
+
+        $comanda = Comanda::find_by_identifier($body['comanda_identifier']);
+
+        if(count($comanda) == 0 ){
+            $msj = array("ok" => "false", "msj" => "no existe la operacion");
+            return $response->withJson($msj, 400);
+        }
+
+        $orders_to_user = array();
+
+        $orders = json_decode($comanda[0]->orders);
+
+        for ($i=0; $i < count($orders); $i++) { 
+            $o = Order::find_by_id($orders[$i]);
+            array_push($orders_to_user, $o);
+        }
+
+        $msj = array("ok" => "true", "orders" => $orders_to_user);
+        return $response->withJson($msj, 200);
+    }
+
     public function update_client_name($request, $response){
         $body = $request->getParsedBody();
 

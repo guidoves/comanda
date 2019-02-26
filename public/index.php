@@ -1,6 +1,7 @@
 <?php
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\UploadedFile;
 
 require '../vendor/autoload.php';
 
@@ -63,6 +64,8 @@ $app->get('/tables/get_opinion_tables', \TableController::class . ':get_opinion'
 $app->get('/comanda/all_activate', \ComandaController::class . ':all_activate_comandas')->add(\Cors::class . ':HabilitarCORSTodos');
 $app->post('/comanda/update_client_name', \ComandaController::class . ':update_client_name')->add(\Validations::class . ':checkMozo')->add(\Cors::class . ':HabilitarCORSTodos');
 $app->post('/comanda/opinion', \ComandaController::class . ':opinion')->add(\Cors::class . ':HabilitarCORSTodos');
+$app->get('/comanda/orders_user', \ComandaController::class . ':get_orders_for_user')->add(\Validations::class . ':checkTable')->add(\Cors::class . ':HabilitarCORSTodos');
+$app->post('/comanda/up_photo', \ComandaController::class . ':up_photo')->add(\Validations::class . ':checkMozo')->add(\Cors::class . ':HabilitarCORSTodos');
 
 $app->post('/orders/new', \OrderController::class . ':new_order')->add(\Validations::class . ':checkMozo')->add(\Cors::class . ':HabilitarCORSTodos');
 $app->post('/orders/close', \OrderController::class . ':close')->add(\Validations::class . ':checkUser')->add(\Cors::class . ':HabilitarCORSTodos');
