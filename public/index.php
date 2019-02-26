@@ -3,19 +3,19 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use Slim\Http\UploadedFile;
 
-require './vendor/autoload.php';
+require '../vendor/autoload.php';
 
 //MIDDLEWARE
-require_once './mw/Cors.php';
-require_once './mw/Validations.php';
+require_once '../mw/Cors.php';
+require_once '../mw/Validations.php';
 
 //CONTROLLERS
-require_once './controllers/users.php';
-require_once './controllers/login.php';
-require_once './controllers/tables.php';
-require_once './controllers/comanda.php';
-require_once './controllers/orders.php';
-require_once './controllers/menues.php';
+require_once '../controllers/users.php';
+require_once '../controllers/login.php';
+require_once '../controllers/tables.php';
+require_once '../controllers/comanda.php';
+require_once '../controllers/orders.php';
+require_once '../controllers/menues.php';
 
 
 $configuration = [
