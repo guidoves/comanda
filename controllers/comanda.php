@@ -62,7 +62,7 @@ class ComandaController{
         $ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
         $file = $comanda->id . '.' . $ext;
         $dir = './static/' . $file;
-        Comanda::update($comanda->id, 'photo', $dir);
+        Comanda::update($comanda->id, 'photo', 'static/' . $file);
     
         move_uploaded_file($_FILES['file']['tmp_name'], $dir);
         $msj = array("ok" => "true", "msj" => "foto subida!");
