@@ -38,6 +38,16 @@ class Comanda{
         return $consulta->fetchAll(PDO::FETCH_CLASS,"Comanda");    
     }
 
+    public static function update($id, $col, $val){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();        
+        $consulta =$objetoAccesoDato->RetornarConsulta("UPDATE comandas set $col=:val WHERE id=:id");
+        $consulta->bindValue(':val', $val, PDO::PARAM_STR);
+        $consulta->bindValue(':id', $id, PDO::PARAM_INT);
+        $consulta->execute();
+
+        return $consulta->rowCount();
+    }
+
     public static function finish_comanda($table_id){
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();        
         $consulta =$objetoAccesoDato->RetornarConsulta("UPDATE comandas set status=:status WHERE table_id=:id AND status='CLIENTE PAGANDO'");
@@ -81,6 +91,14 @@ class Comanda{
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
         $consulta =$objetoAccesoDato->RetornarConsulta("SELECT table_id, opinion FROM comandas WHERE (status='FINALIZADO') AND date_stats BETWEEN '$start' AND '$end'");
         $consulta->execute();			
+        return $consulta->fetchAll(PDO::FETCH_CLASS,"Comanda");
+    }
+
+    public static function find_by_id($id){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->RetornarConsulta("SELECT * FROM comandas WHERE id=:id");
+        $consulta->bindValue(':id',$id,PDO::PARAM_INT);
+        $consulta->execute();
         return $consulta->fetchAll(PDO::FETCH_CLASS,"Comanda");
     }
 

@@ -60,23 +60,20 @@ class Validations{
     }
 
     public function checkMozo($request, $response, $next){
-        $body = $request->getParsedBody();
-
-        if ( !isset($body['token']) {
-            $msj = array("ok" => "false", "msj" => "Fallo autenticación");
-            return $response->withJson($msj, 403);
-        }
+        $token = $request->getHeader('token')[0];
 
         try{
-            AutentificadorJWT::VerificarToken($body['token']);
+            AutentificadorJWT::VerificarToken($token);
         }
         catch( Exception $e ){
             $msj = array("ok" => "false", "msj" => "Fallo autenticación");
             return $response->withJson($msj, 403);
         }
 
-        $data = AutentificadorJWT::ObtenerData($body['token']);
-        if($data->role == 'ADMIN' || $data->role == 'MOZO' ){
+        $data = AutentificadorJWT::ObtenerData($token);
+    
+        if($data->role == 'SOCIO' || $data->role == 'MOZO' ){
+            $request = $request->withAttribute('user_id', $data->id);
             return $next($request, $response);
         }
         else{
@@ -87,22 +84,20 @@ class Validations{
     }
 
     public function checkUser($request, $response){
-        if ( !isset($body['token']) {
-            $msj = array("ok" => "false", "msj" => "Fallo autenticación");
-            return $response->withJson($msj, 403);
-        }
-
+        $token = $request->getHeader('token')[0];
+        
         try{
-            AutentificadorJWT::VerificarToken($body['token']);
+            AutentificadorJWT::VerificarToken($token);
         }
         catch( Exception $e ){
             $msj = array("ok" => "false", "msj" => "Fallo autenticación");
             return $response->withJson($msj, 403);
         }
 
-        $data = AutentificadorJWT::ObtenerData($body['token']);
-        if($data->role == 'ADMIN' || $data->role == 'BARTENDER' || $data->role == 'CERVECERO'
+        $data = AutentificadorJWT::ObtenerData($token);
+        if($data->role == 'SOCIO' || $data->role == 'BARTENDER' || $data->role == 'CERVECERO'
         || $data->role == 'COCINERO' ){
+            $request = $request->withAttribute('user_id', $data->id);
             return $next($request, $response);
         }
         else{
@@ -112,7 +107,7 @@ class Validations{
     }
 
     public function checkAdmin($request, $response){
-        if ( !isset($body['token']) {
+        if ( !isset($body['token'])) {
             $msj = array("ok" => "false", "msj" => "Fallo autenticación");
             return $response->withJson($msj, 403);
         }

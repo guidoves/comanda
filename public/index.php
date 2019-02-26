@@ -48,7 +48,7 @@ $app->get('/users/all_activate_users', \UserController::class . ':all_activate_u
 
 $app->post('/tables/new', \TableController::class . ':new_table')->add(\Cors::class . ':HabilitarCORSTodos');
 $app->post('/tables/update', \TableController::class . ':update_table')->add(\Cors::class . ':HabilitarCORSTodos');
-$app->post('/tables/open_table', \TableController::class . ':open_table')->add(\Cors::class . ':HabilitarCORSTodos');
+$app->post('/tables/open_table', \TableController::class . ':open_table')->add(\Validations::class . ':checkMozo')->add(\Cors::class . ':HabilitarCORSTodos');
 $app->post('/tables/close_table', \TableController::class . ':close_table')->add(\Cors::class . ':HabilitarCORSTodos');
 $app->post('/tables/disable_table', \TableController::class . ':disable_table')->add(\Cors::class . ':HabilitarCORSTodos');
 $app->get('/tables/list', \TableController::class . ':all_tables')->add(\Cors::class . ':HabilitarCORSTodos');
@@ -60,6 +60,8 @@ $app->get('/tables/get_opinion_tables', \TableController::class . ':get_opinion'
 
 //$app->post('/comanda/new', \ComandaController::class . ':new_comanda')->add(\Cors::class . ':HabilitarCORSTodos');
 $app->get('/comanda/all_activate', \ComandaController::class . ':all_activate_comandas')->add(\Cors::class . ':HabilitarCORSTodos');
+$app->post('/comanda/update_client_name', \ComandaController::class . ':update_client_name')->add(\Validations::class . ':checkMozo')->add(\Cors::class . ':HabilitarCORSTodos');
+
 
 $app->post('/orders/new', \OrderController::class . ':new_order')->add(\Cors::class . ':HabilitarCORSTodos');
 $app->get('/orders/best', \OrderController::class . ':get_best_seller')->add(\Cors::class . ':HabilitarCORSTodos');

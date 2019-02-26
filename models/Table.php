@@ -20,6 +20,14 @@ class Table{
         
     }
 
+    public static function find_by_id($id){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->RetornarConsulta("SELECT id, status, identifier, is_activated FROM tables WHERE id=:id");
+        $consulta->bindValue(':id',$id,PDO::PARAM_INT);
+        $consulta->execute();
+        return $consulta->fetchAll(PDO::FETCH_CLASS,"Table");
+    }
+
     public static function update($table){
         
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();        

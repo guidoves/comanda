@@ -59,23 +59,22 @@ class TableController{
     public function open_table($request, $response){
         $body = $request->getParsedBody();
 
-        if(!isset($body['id']) || !isset($body['status']) ){
+        if(!isset($body['id'])){
             $msj = array("ok" => "false");
             return $response->withJson($msj, 400);
         }
 
-        if($body['status'] != 'ABIERTA'){
-            $msj = array("ok" => "true", "msj" => "mesa dada de baja");
-            return $response->withJson($msj, 200);
+        $table = Table::find_by_id($body['id'])[0];
+        if( count($table) == 0 || $table->status != 'CERRADA' ){
+            $msj = array("ok" => "false", "msj" => "No existe la mesa o la mesa ya se encuentra abierta");
+            return $response->withJson($msj, 400);
         }
 
-        $table = new Table();
-        $table->id = $body['id'];
-        $table->status = $body['status'];
+        $table->status = 'ESPERANDO PEDIDO';
         Table::update($table);
         
         $comanda = new Comanda();
-        $comanda->mozo_id = $body['mozo_id'];
+        $comanda->mozo_id = $request->getAttribute('user_id');
         $comanda->table_id = $body['id'];
         $comanda->new_comanda();
 

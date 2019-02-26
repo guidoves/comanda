@@ -10,10 +10,11 @@ class Order{
     public $estimated_time;
     public $name;
     public $date;
+    public $date_start;
 
     public function new_order(){
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-        $consulta =$objetoAccesoDato->RetornarConsulta("INSERT into orders (user_id, order_type, estimated_time, name, date)values('$this->user_id','$this->order_type','$this->estimated_time','$this->name', NOW())");
+        $consulta =$objetoAccesoDato->RetornarConsulta("INSERT into orders (user_id, order_type, estimated_time, name, date, date_start)values('$this->user_id','$this->order_type','$this->estimated_time','$this->name', NOW(), NOW())");
         $consulta->execute();
         return $objetoAccesoDato->RetornarUltimoIdInsertado();
     }

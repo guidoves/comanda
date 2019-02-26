@@ -1,18 +1,53 @@
 <?php
 
 require_once '../models/Order.php';
+require_once '../models/Menu.php';
+require_once '../models/Comanda.php';
 
 class OrderController{
 
     public function new_order($request, $response){
-
         $body = $request->getParsedBody();
-        $order = new Order();
-        $order->user_id = $body['user_id'];
+        
+        if(!isset($body['order_type']) || !isset($body['estimated_time']) 
+        || !isset($body['menu_id']) || !isset($body['comanda_id'])){
+            $msj = array("ok" => "false");
+            return $response->withJson($msj, 400);
+        }
+
+        $menu = Menu::all_by_type($body['order_type']);
+        if( count($menu) == 0 ){
+            $msj = array("ok" => "false", "msj" => "No existe el plato");
+            return $response->withJson($msj, 400);
+        }
+
+        $menu_name = '';
+
+        for ($i=0; $i < count($menu); $i++) { 
+            if( $menu[$i]->id == $body['menu_id'] ){
+                $menu_name = $menu[$i]->name;
+            }
+        }
+
+        if($menu_name = ''){
+            $msj = array("ok" => "false", "msj" => "No existe el plato");
+            return $response->withJson($msj, 400);
+        }
+        
+        /* $order = new Order();
+        $order->user_id = $request->getAttribute('user_id');
         $order->order_type = $body['order_type'];
         $order->estimated_time = $body['estimated_time'];
+        $order->name = $menu_name;
 
-        $order->new_order();
+        $order->new_order(); */
+        $comanda = Comanda::find_by_id($body['comanda_id']);
+        
+        var_dump($comanda->orders);
+
+        $test = json_decode($comanda->orders);
+
+        die();
 
         $msj = array("ok" => "true", "msj" => "nuevo pedido!", "order" => $order);
         return $reponse->withJson($msj, 200);
