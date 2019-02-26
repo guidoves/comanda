@@ -65,6 +65,9 @@ class ComandaController{
         
         $ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
         $file = $comanda->id . '.' . $ext;
+
+        var_dump($file);
+        
         $dir = './static/' . $file;
 
         Comanda::update($comanda->id, 'photo', $dir);
