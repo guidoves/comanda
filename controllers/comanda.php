@@ -49,28 +49,22 @@ class ComandaController{
 
     public function up_photo($request, $response){
         $body = $request->getParsedBody();
-
-
         if(!isset($body['comanda_id']) || !isset($_FILES['file'])){
             $msj = array("ok" => "false");
             return $response->withJson($msj, 400);
         }
-
         $comanda = Comanda::find_by_id($body['comanda_id'])[0];
-
         if(!$comanda){
             $msj = array("ok" => "false", "msj" => "no se encontro la comanda");
             return $response->withJson($msj, 400);
         }
         
         $ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
-        $file = $comanda->id . '.' . $ext;        
+        $file = $comanda->id . '.' . $ext;
         $dir = './static/' . $file;
-
         Comanda::update($comanda->id, 'photo', $dir);
     
         move_uploaded_file($_FILES['file']['tmp_name'], $dir);
-
         $msj = array("ok" => "true", "msj" => "foto subida!");
         return $response->withJson($msj, 200);
     
