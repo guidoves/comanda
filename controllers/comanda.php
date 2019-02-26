@@ -70,7 +70,7 @@ class ComandaController{
     
     }
 
-    public function delete_photo($request, $response)[{
+    public function delete_photo($request, $response){
         $body = $request->getParsedBody();
 
 
