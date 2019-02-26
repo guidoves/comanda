@@ -83,7 +83,7 @@ class Validations{
 
     }
 
-    public function checkUser($request, $response){
+    public function checkUser($request, $response, $next){
         $token = $request->getHeader('token')[0];
         
         try{
@@ -106,22 +106,20 @@ class Validations{
         }
     }
 
-    public function checkAdmin($request, $response){
-        if ( !isset($body['token'])) {
-            $msj = array("ok" => "false", "msj" => "Fallo autenticación");
-            return $response->withJson($msj, 403);
-        }
+    public function checkAdmin($request, $response, $next){
+        $token = $request->getHeader('token')[0];
 
         try{
-            AutentificadorJWT::VerificarToken($body['token']);
+            AutentificadorJWT::VerificarToken($token);
         }
         catch( Exception $e ){
             $msj = array("ok" => "false", "msj" => "Fallo autenticación");
             return $response->withJson($msj, 403);
         }
 
-        $data = AutentificadorJWT::ObtenerData($body['token']);
-        if($data->role == 'ADMIN'){
+        $data = AutentificadorJWT::ObtenerData($token);
+        if($data->role == 'SOCIO'){
+            $request = $request->withAttribute('user_id', $data->id);
             return $next($request, $response);
         }
         else{

@@ -11,13 +11,43 @@ class Order{
     public $name;
     public $date;
     public $date_start;
+    public $amount;
 
     public function new_order(){
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-        $consulta =$objetoAccesoDato->RetornarConsulta("INSERT into orders (user_id, order_type, estimated_time, name, date, date_start)values('$this->user_id','$this->order_type','$this->estimated_time','$this->name', NOW(), NOW())");
+        $consulta =$objetoAccesoDato->RetornarConsulta("INSERT into orders (order_type, name, date, date_start, amount)values('$this->order_type','$this->name', NOW(), NOW(), '$this->amount')");
         $consulta->execute();
         return $objetoAccesoDato->RetornarUltimoIdInsertado();
     }
+
+    public function set_order($order_id, $status, $user_id, $estimated_time){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+        $consulta =$objetoAccesoDato->RetornarConsulta("UPDATE orders set user_id=:user_id, status=:status, estimated_time=:time WHERE id=:id");
+        $consulta->bindValue(':status', $status, PDO::PARAM_STR);
+        $consulta->bindValue(':time', $estimated_time, PDO::PARAM_INT);
+        $consulta->bindValue(':id', $order_id, PDO::PARAM_INT);
+        $consulta->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $consulta->execute();			
+        return $consulta->fetchAll(PDO::FETCH_CLASS,"Order");
+    }
+
+    public static function update_status($order_id, $status){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+        $consulta =$objetoAccesoDato->RetornarConsulta("UPDATE orders set status=:status WHERE id=:id");
+        $consulta->bindValue(':status', $status, PDO::PARAM_STR);
+        $consulta->bindValue(':id', $order_id, PDO::PARAM_INT);
+        $consulta->execute();			
+        return $consulta->fetchAll(PDO::FETCH_CLASS,"Order");
+    }
+
+    public static function all_by_sector($order_type){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+        $consulta =$objetoAccesoDato->RetornarConsulta("SELECT * FROM orders WHERE order_type=:type AND (NOT status='FINALIZADO' AND NOT status='FINALIZADO CON DEMORA') ");
+        $consulta->bindValue(':type', $order_type, PDO::PARAM_STR);
+        $consulta->execute();			
+        return $consulta->fetchAll(PDO::FETCH_CLASS,"Order");
+    }
+
 
     public static function get_orders($start, $end, $status){
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
@@ -56,6 +86,14 @@ class Order{
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
         $consulta =$objetoAccesoDato->RetornarConsulta("SELECT name, COUNT(name) as total FROM orders WHERE (status='FINALIZADO' OR status='FINALIZADO CON DEMORA') AND date BETWEEN '$start' AND '$end' GROUP BY name ORDER BY total $query");
         $consulta->execute();			
+        return $consulta->fetchAll(PDO::FETCH_CLASS,"Order");
+    }
+
+    public static function find_by_id($id){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->RetornarConsulta("SELECT * FROM orders WHERE id=:id");
+        $consulta->bindValue(':id',$id,PDO::PARAM_INT);
+        $consulta->execute();
         return $consulta->fetchAll(PDO::FETCH_CLASS,"Order");
     }
 

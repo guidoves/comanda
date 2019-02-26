@@ -19,6 +19,34 @@ class ComandaController{
 
     }
 
+    public function opinion($request, $response){
+        $body = $request->getParsedBody();
+
+        if(!isset($body['identifier']) || !isset($body['mozo_opinion']) ||
+        !isset($body['mesa_opinion']) || !isset($body['cocinero_opinion'])
+        || !isset($body['comentarios']) ){
+            $msj = array("ok" => "false");
+            return $response->withJson($msj, 400);
+        }
+
+        $comanda = Comanda::find_by_identifier($body['identifier'])[0];
+
+        if(!$comanda){
+            $msj = array("ok" => "false", "msj" => "numero de indentificacion invalido");
+            return $response->withJson($msj, 400);
+        }
+
+        $opinion = array("mozo" => $body['mozo_opinion'], "mesa" => $body['mesa_opinion'],
+         "cocinero" => $body['cocinero_opinion'], "comentarios" => $body['comentarios']);
+
+         $opinion_data = json_encode($opinion);
+
+         Comanda::update($comanda->id, 'opinion', $opinion_data);
+
+         $msj = array("ok" => "true", "msj" => "opinion recibida!");
+        return $response->withJson($msj, 200);
+    }
+
     public function update_client_name($request, $response){
         $body = $request->getParsedBody();
 

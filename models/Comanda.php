@@ -102,5 +102,13 @@ class Comanda{
         return $consulta->fetchAll(PDO::FETCH_CLASS,"Comanda");
     }
 
+    public static function find_by_identifier($identifier){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->RetornarConsulta("SELECT * FROM comandas WHERE identifier=:identifier");
+        $consulta->bindValue(':identifier', $identifier, PDO::PARAM_STR);
+        $consulta->execute();
+        return $consulta->fetchAll(PDO::FETCH_CLASS,"Comanda");
+    }
+
 
 }

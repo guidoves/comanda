@@ -3,6 +3,7 @@
 require_once '../models/Table.php';
 require_once '../models/Comanda.php';
 require_once '../models/Util.php';
+require_once '../models/Order.php';
 
 class TableController{
 
@@ -86,18 +87,38 @@ class TableController{
     public function close_table($request, $response){
         $body = $request->getParsedBody();
 
-        if(!isset($body['id'])){
+        if(!isset($body['table_id']) || !isset($body['comanda_id'])){
             $msj = array("ok" => "false");
             return $response->withJson($msj, 400);
         }
+        $table = Table::find_by_id($body['table_id'])[0];
+        $comanda = Comanda::find_by_id($body['comanda_id'])[0];
+        $orders = json_decode($comanda->orders);
+        $amount = 0;
 
-        $table = new Table();
-        $table->id = $body['id'];
+        for ($i=0; $i < count($orders); $i++) { 
+            $o = Order::find_by_id($orders[$i])[0];
+            if($o->status != 'FINALIZADO' && $o->status != 'FINALIZADO CON DEMORA'){
+                Order::update_status($o->id, 'CANCELADO');
+            }
+            else{
+                $amount += floatval($o->amount);
+            }
+        }
+
+        if( $table->status == 'CLIENTE PAGANDO' ){
+            Comanda::update($comanda->id, 'status', 'CANCELADO');
+        }
+        else{
+            Comanda::update($comanda->id, 'status', 'FINALIZADO');
+        }
+
+        Comanda::update($comanda->id, 'amount', truncateFloat($amount, 2));
+
         $table->status = 'CERRADA';
         Table::update($table);
-        Comanda::finish_comanda($body['id']);
 
-        $msj = array("ok" => "true", "msj" => " modificado!");
+        $msj = array("ok" => "true", "msj" => "mesa cerrada");
         return $response->withJson($msj, 200);
 
     }
