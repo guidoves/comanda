@@ -70,7 +70,7 @@ class ComandaController{
     
     }
 
-    public function delete_photo($request, $response){
+    /* public function delete_photo($request, $response){
         $body = $request->getParsedBody();
 
 
@@ -100,7 +100,7 @@ class ComandaController{
         $msj = array("ok" => "true", "msj" => "archivo elminado");
             return $response->withJson($msj, 200);
 
-    }
+    } */
 
     public function get_orders_for_user($request, $response){
         $body = $request->getParsedBody();

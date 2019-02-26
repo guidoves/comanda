@@ -66,7 +66,7 @@ $app->post('/comanda/update_client_name', \ComandaController::class . ':update_c
 $app->post('/comanda/opinion', \ComandaController::class . ':opinion')->add(\Cors::class . ':HabilitarCORSTodos');
 $app->get('/comanda/orders_user', \ComandaController::class . ':get_orders_for_user')->add(\Validations::class . ':checkTable')->add(\Cors::class . ':HabilitarCORSTodos');
 $app->post('/comanda/up_photo', \ComandaController::class . ':up_photo')->add(\Validations::class . ':checkMozo')->add(\Cors::class . ':HabilitarCORSTodos');
-$app->post('/comanda/delete_photo', \ComandaController::class . ':delete_photo')->add(\Validations::class . ':checkMozo')->add(\Cors::class . ':HabilitarCORSTodos');
+//$app->post('/comanda/delete_photo', \ComandaController::class . ':delete_photo')->add(\Validations::class . ':checkMozo')->add(\Cors::class . ':HabilitarCORSTodos');
 
 $app->post('/orders/new', \OrderController::class . ':new_order')->add(\Validations::class . ':checkMozo')->add(\Cors::class . ':HabilitarCORSTodos');
 $app->post('/orders/close', \OrderController::class . ':close')->add(\Validations::class . ':checkUser')->add(\Cors::class . ':HabilitarCORSTodos');
