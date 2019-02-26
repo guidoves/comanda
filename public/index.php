@@ -67,6 +67,7 @@ $app->post('/comanda/opinion', \ComandaController::class . ':opinion')->add(\Cor
 $app->get('/comanda/orders_user', \ComandaController::class . ':get_orders_for_user')->add(\Validations::class . ':checkTable')->add(\Cors::class . ':HabilitarCORSTodos');
 $app->post('/comanda/up_photo', \ComandaController::class . ':up_photo')->add(\Validations::class . ':checkMozo')->add(\Cors::class . ':HabilitarCORSTodos');
 $app->post('/comanda/delete_photo', \ComandaController::class . ':delete_photo')->add(\Validations::class . ':checkMozo')->add(\Cors::class . ':HabilitarCORSTodos');
+$app->post('/comanda/print_tkt', \ComandaController::class . ':print_tkt')->add(\Validations::class . ':checkMozo')->add(\Cors::class . ':HabilitarCORSTodos');
 
 $app->post('/orders/new', \OrderController::class . ':new_order')->add(\Validations::class . ':checkMozo')->add(\Cors::class . ':HabilitarCORSTodos');
 $app->post('/orders/close', \OrderController::class . ':close')->add(\Validations::class . ':checkUser')->add(\Cors::class . ':HabilitarCORSTodos');

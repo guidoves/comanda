@@ -1,6 +1,7 @@
 <?php
 
 require_once '../models/Comanda.php';
+require_once './fpdf.php';
 
 class ComandaController{
 
@@ -47,6 +48,26 @@ class ComandaController{
         return $response->withJson($msj, 200);
     }
 
+    public function print_tkt($request, $response){
+        $body = $request->getParsedBody();
+        if(!isset($body['comanda_id'])){
+            $msj = array("ok" => "false");
+            return $response->withJson($msj, 400);
+        }
+
+        $comanda = Comanda::find_by_id($body['comanda_id'])[0];
+        $tkt = $comanda->date . <br> . $comanda->client_name . <br> . $comanda->identifier;
+
+        $pdf = new FPDF();
+        $pdf->AddPage();
+        $pdf->SetFont('Arial','B',16);
+        $pdf->Cell(40,10,$tkt);
+        $pdf->Output($name=$comanda->identifier);
+
+        $msj = array("ok" => "true");
+        return $response->withJson($msj, 200);
+    }
+
     public function up_photo($request, $response){
         $body = $request->getParsedBody();
         if(!isset($body['comanda_id']) || !isset($_FILES['file'])){
@@ -62,7 +83,7 @@ class ComandaController{
         $ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
         $file = $comanda->id . '.' . $ext;
         $dir = './static/' . $file;
-        Comanda::update($comanda->id, 'photo', 'static/' . $file);
+        Comanda::update($comanda->id, 'photo', $dir);
     
         move_uploaded_file($_FILES['file']['tmp_name'], $dir);
         $msj = array("ok" => "true", "msj" => "foto subida!");
@@ -93,8 +114,7 @@ class ComandaController{
             return $response->withJson($msj, 400);
         }
 
-        $file = fopen($dir, 'w');
-        unlink($file);
+        unlink($dir);
         Comanda::update($body['comanda_id'], 'photo', '');
 
         $msj = array("ok" => "true", "msj" => "archivo elminado");
