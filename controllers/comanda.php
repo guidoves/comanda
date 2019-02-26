@@ -64,10 +64,7 @@ class ComandaController{
         }
         
         $ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
-        $file = $comanda->id . '.' . $ext;
-
-        var_dump($file);
-        
+        $file = $comanda->id . '.' . $ext;        
         $dir = './static/' . $file;
 
         Comanda::update($comanda->id, 'photo', $dir);
@@ -77,6 +74,38 @@ class ComandaController{
         $msj = array("ok" => "true", "msj" => "foto subida!");
         return $response->withJson($msj, 200);
     
+    }
+
+    public function delete_photo($request, $response)[{
+        $body = $request->getParsedBody();
+
+
+        if(!isset($body['comanda_id'])){
+            $msj = array("ok" => "false");
+            return $response->withJson($msj, 400);
+        }
+
+        $comanda = Comanda::find_by_id($body['comanda_id'])[0];
+
+        if(!$comanda){
+            $msj = array("ok" => "false", "msj" => "no se encontro la comanda");
+            return $response->withJson($msj, 400);
+        }
+
+        $dir = $comanda->photo;
+
+        id(!file_exists($dir)){
+            $msj = array("ok" => "false", "msj" => "no existe el archivo");
+            return $response->withJson($msj, 400);
+        }
+
+        $file = fopen($dir, 'w');
+        unlink($file);
+        Comanda::update($body['comanda_id'], 'photo', '');
+
+        $msj = array("ok" => "true", "msj" => "archivo elminado");
+            return $response->withJson($msj, 200);
+
     }
 
     public function get_orders_for_user($request, $response){
