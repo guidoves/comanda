@@ -10,7 +10,6 @@ class Table{
 
     public function new_table(){
         
-        $tables = count(Table::all());
         $identifier = 'ME' . generarCodigo(3);
         
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 

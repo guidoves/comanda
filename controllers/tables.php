@@ -8,8 +8,6 @@ require_once '../models/Order.php';
 class TableController{
 
     public function new_table($request, $reponse){
-
-        $body = $request->getParsedBody();
         $table = new Table();
         $table->new_table();
 
@@ -27,8 +25,8 @@ class TableController{
             return $response->withJson($msj, 400);
         }
 
-        if($body['status'] != 'CLIENTE ESPERANDO' || $body['status'] != 'CLIENTE COMIENDO'
-         || $body['status'] != 'CLIENTE PAGANDO' ){
+        if($body['status'] != "CLIENTE ESPERANDO" && $body['status'] != "CLIENTE COMIENDO"
+         && $body['status'] && "CLIENTE PAGANDO" ){
             $msj = array("ok" => "false", "msj" => "estado inválido");
             return $response->withJson($msj, 400);
         }
@@ -66,7 +64,7 @@ class TableController{
         }
 
         $table = Table::find_by_id($body['id'])[0];
-        if( count($table) == 0 || $table->status != 'CERRADA' ){
+        if($table->status != 'CERRADA' || !$table  ){
             $msj = array("ok" => "false", "msj" => "No existe la mesa o la mesa ya se encuentra abierta");
             return $response->withJson($msj, 400);
         }

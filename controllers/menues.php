@@ -38,6 +38,12 @@ class MenuController{
         return $response->withJson($msj, 200);    
     }
 
+    public function all_menus($request, $response){
+        $menus = Menu::all();
+        $msj = array("ok" => "true", "menus" => $menus);
+        return $response->withJson($msj, 200);
+    }
+
 
 
 

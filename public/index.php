@@ -76,9 +76,11 @@ $app->get('/orders/get_orders', \OrderController::class . ':get_orders')->add(\V
 $app->post('/orders/update_status', \OrderController::class . ':update_status')->add(\Validations::class . ':checkUser')->add(\Cors::class . ':HabilitarCORSTodos');
 $app->get('/orders/all_by_type', \OrderController::class . ':all_by_type')->add(\Validations::class . ':checkUser')->add(\Cors::class . ':HabilitarCORSTodos');
 $app->get('/orders/get_delayed_orders', \OrderController::class . ':get_delayed_orders')->add(\Validations::class . ':checkAdmin')->add(\Cors::class . ':HabilitarCORSTodos');
+$app->get('/orders/all_activate', \OrderController::class . ':all_activate')->add(\Validations::class . ':checkMozo')->add(\Cors::class . ':HabilitarCORSTodos');
 
 $app->post('/menu/new', \MenuController::class . ':new_menu')->add(\Validations::class . ':checkAdmin')->add(\Cors::class . ':HabilitarCORSTodos');
 $app->post('/menu/delete', \MenuController::class . ':delete_menu')->add(\Validations::class . ':checkAdmin')->add(\Cors::class . ':HabilitarCORSTodos');
+$app->get('/menu/all', \MenuController::class . ':all_menus')->add(\Validations::class . ':checkMozo')->add(\Cors::class . ':HabilitarCORSTodos');
 
 $app->run();
 

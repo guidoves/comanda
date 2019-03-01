@@ -9,36 +9,21 @@ class OrderController{
     public function new_order($request, $response){
         $body = $request->getParsedBody();
         
-        if(!isset($body['order_type']) || !isset($body['menu_id']) || !isset($body['comanda_id'])){
+        if(!isset($body['menu_id']) || !isset($body['comanda_id'])){
             $msj = array("ok" => "false");
             return $response->withJson($msj, 400);
         }
 
-        $menu = Menu::all_by_type($body['order_type']);
-        if( count($menu) == 0 ){
-            $msj = array("ok" => "false", "msj" => "No existe el plato");
-            return $response->withJson($msj, 400);
-        }
-
-        $menu_name = '';
-        $menu_amount = '';
-
-        for ($i=0; $i < count($menu); $i++) { 
-            if( $menu[$i]->id == $body['menu_id'] ){
-                $menu_name = $menu[$i]->name;
-                $menu_amount = $menu[$i]->amount;
-            }
-        }
-
-        if($menu_name = ''){
+        $menu = Menu::find_by_id($body['menu_id'])[0];
+        if(!$menu){
             $msj = array("ok" => "false", "msj" => "No existe el plato");
             return $response->withJson($msj, 400);
         }
         
         $order = new Order();
-        $order->order_type = $body['order_type'];
-        $order->name = $menu_name;
-        $order->amount = $menu_amount;
+        $order->order_type = $menu->type;
+        $order->name = $menu->name;
+        $order->amount = $menu->amount;
 
         $id = $order->new_order();
         $comanda = Comanda::find_by_id($body['comanda_id'])[0];
@@ -124,6 +109,12 @@ class OrderController{
 
         $orders = Order::all_by_sector($body['order_type']);
 
+        $msj = array("ok" => "true", "orders" => $orders);
+        return $response->withJson($msj, 200);
+    }
+
+    public function all_activate($request, $response){
+        $orders = Order::all_activate();
         $msj = array("ok" => "true", "orders" => $orders);
         return $response->withJson($msj, 200);
     }

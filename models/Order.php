@@ -48,6 +48,13 @@ class Order{
         return $consulta->fetchAll(PDO::FETCH_CLASS,"Order");
     }
 
+    public static function all_activate(){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+        $consulta =$objetoAccesoDato->RetornarConsulta("SELECT * FROM orders WHERE NOT status='FINALIZADO' AND NOT status='FINALIZADO CON DEMORA' ");
+        $consulta->execute();			
+        return $consulta->fetchAll(PDO::FETCH_CLASS,"Order");
+    }
+
 
     public static function get_orders($start, $end, $status){
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 

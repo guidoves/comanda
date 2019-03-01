@@ -26,6 +26,14 @@ class Menu{
         return $consulta->fetchAll(PDO::FETCH_CLASS,"Menu");
     }
 
+    public static function find_by_id($id){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->RetornarConsulta("SELECT id, type, name, amount FROM menu WHERE id=:id");
+        $consulta->bindValue(':id',$id,PDO::PARAM_INT);
+        $consulta->execute();
+        return $consulta->fetchAll(PDO::FETCH_CLASS,"Menu");
+    }
+
     public static function delete_menu($menu_id){
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
         $consulta =$objetoAccesoDato->RetornarConsulta("DELETE FROM menu WHERE id=:id");
@@ -33,5 +41,12 @@ class Menu{
         $consulta->execute();
         
         return $objetoAccesoDato->RetornarUltimoIdInsertado();
+    }
+
+    public static function all(){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
+        $consulta =$objetoAccesoDato->RetornarConsulta("SELECT id, type, name, amount FROM menu");
+        $consulta->execute();			
+        return $consulta->fetchAll(PDO::FETCH_CLASS,"Menu");
     }
 }

@@ -108,8 +108,9 @@ class Validations{
     }
 
     public function checkAdmin($request, $response, $next){
+    
         $token = $request->getHeader('token')[0];
-
+        
         try{
             AutentificadorJWT::VerificarToken($token);
         }

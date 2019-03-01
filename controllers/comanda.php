@@ -1,7 +1,7 @@
 <?php
 
 require_once '../models/Comanda.php';
-require_once './fpdf.php';
+require('fpdf.php');
 
 class ComandaController{
 
@@ -56,7 +56,7 @@ class ComandaController{
         }
 
         $comanda = Comanda::find_by_id($body['comanda_id'])[0];
-        $tkt = $comanda->date . <br> . $comanda->client_name . <br> . $comanda->identifier;
+        $tkt = $comanda->date . '<br>' . $comanda->client_name . '<br>' . $comanda->identifier;
 
         $pdf = new FPDF();
         $pdf->AddPage();
