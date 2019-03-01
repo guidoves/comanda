@@ -42,7 +42,7 @@ class Order{
 
     public static function all_by_sector($order_type){
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-        $consulta =$objetoAccesoDato->RetornarConsulta("SELECT * FROM orders WHERE order_type=:type AND (NOT status='FINALIZADO' AND NOT status='FINALIZADO CON DEMORA') ");
+        $consulta =$objetoAccesoDato->RetornarConsulta("SELECT * FROM orders WHERE order_type=:type AND (NOT status='FINALIZADO' AND NOT status='FINALIZADO CON DEMORA' AND NOT status='CANCELADO') ");
         $consulta->bindValue(':type', $order_type, PDO::PARAM_STR);
         $consulta->execute();			
         return $consulta->fetchAll(PDO::FETCH_CLASS,"Order");
@@ -50,7 +50,7 @@ class Order{
 
     public static function all_activate(){
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-        $consulta =$objetoAccesoDato->RetornarConsulta("SELECT * FROM orders WHERE NOT status='FINALIZADO' AND NOT status='FINALIZADO CON DEMORA' ");
+        $consulta =$objetoAccesoDato->RetornarConsulta("SELECT * FROM orders WHERE NOT status='FINALIZADO' AND NOT status='FINALIZADO CON DEMORA' AND NOT status='CANCELADO' ");
         $consulta->execute();			
         return $consulta->fetchAll(PDO::FETCH_CLASS,"Order");
     }

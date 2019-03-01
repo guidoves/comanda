@@ -99,6 +99,7 @@ class Validations{
         if($data->role == 'SOCIO' || $data->role == 'BARTENDER' || $data->role == 'CERVECERO'
         || $data->role == 'COCINERO' ){
             $request = $request->withAttribute('user_id', $data->id);
+            $request = $request->withAttribute('role', $data->role);
             return $next($request, $response);
         }
         else{

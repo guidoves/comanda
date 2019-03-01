@@ -75,7 +75,7 @@ class OrderController{
             return $response->withJson($msj, 400);
         }
 
-        if($body['status'] != 'EN PREPARACION' && $body['status'] != 'LISTO PARA SERVIR'){
+        if($body['status'] != 'EN PREPARACION' && $body['status'] != 'LISTO PARA SERVIR' && $body['status'] != 'PENDIENTE'){
             $msj = array("ok" => "false");
             return $response->withJson($msj, 400);
         }
@@ -100,14 +100,20 @@ class OrderController{
     }
 
     public function all_by_type($request, $response){
-        $body = $request->getParsedBody();
+        $params = $request->getParams();
         
-        if(!isset($body['order_type'])){
+        if(!isset($params['order_type'])){
             $msj = array("ok" => "false");
             return $response->withJson($msj, 400);
         }
+        $role = $request->getAttribute('role');
 
-        $orders = Order::all_by_sector($body['order_type']);
+        if($role != "SOCIO"){
+            $orders = Order::all_by_sector($params['order_type']);
+        }
+        else{
+            $orders = Order::all_activate();
+        }
 
         $msj = array("ok" => "true", "orders" => $orders);
         return $response->withJson($msj, 200);
